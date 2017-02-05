@@ -1,0 +1,4 @@
+*.o
+ass3
+dataFiles/*
+
