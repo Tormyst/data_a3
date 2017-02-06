@@ -1,4 +1,5 @@
 *.o
 ass3
 dataFiles/*
-
+CMakeLists.txt
+.idea/

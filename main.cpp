@@ -1,21 +1,18 @@
-#include <stdio.h>
-#include <stdlib.h>
+#include <iostream>
 
 #include "loadCSV.h"
+using namespace std;
 
 int main(int argc, char** argv){
     int i;
-    char*** db;
-    printf("argc: %d\n", argc);
+    unique_ptr<database> db;
+    cout << "argc: " << argc << endl;
     for(i = 0; i < argc; i++){
         printf("argv[%d]: %s\n", i, argv[i]);
     }
     if(argc >= 2){
-        int err = readCSV(argv[1], ' ', &db);
-        if(err){
-            fprintf(stderr, "Could not read CSV file. Stoping.\n");
-            exit(err);
-        }
+        db = readCSV(argv[1]);
+        cout << *db;
     }
     return EXIT_SUCCESS;
 }

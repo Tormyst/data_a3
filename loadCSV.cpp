@@ -1,18 +1,35 @@
-#include <stdio.h>
-#define BUFFER_SIZE 0xff
+#include "loadCSV.h"
 
-int readCSV(const char* inputFile, char delimiter, char**** database)
+#include <iostream>
+#include <sstream>
+#include <fstream>
+
+using namespace std;
+
+vector<string> readLine(string s){
+    stringstream ss(s);
+    istream_iterator<string> begin(ss);
+    istream_iterator<string> end;
+    vector<string> vstrings(begin, end);
+    return vstrings;
+}
+
+unique_ptr<database> readCSV(const string inputFile)
 {
-    FILE* dataFile; 
-    char* line = NULL;
-    size_t len = 0;
-
-    dataFile = fopen( inputFile, "r" );
-    if(dataFile == NULL){
-        fprintf(stderr, "ERROR: File %s could not be open\n", inputFile);
-        return 1;
+    ifstream dataFile;
+    unique_ptr<database> d(new database());
+    dataFile.open(inputFile);
+    if(dataFile.fail()){
+        cerr << "ERROR: File " << inputFile <<  " could not be open" << endl;
+        return NULL;
     }
-    while(EOF!=getline(&line, &len, dataFile))
-        printf("%s", line);
-    return 0;
+    string line;
+    getline(dataFile, line);
+    d->titles = readLine(line);
+
+    while(getline(dataFile, line)){
+        d->data.push_back(readLine(line));
+    }
+
+    return d;
 }
