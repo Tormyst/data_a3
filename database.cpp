@@ -7,8 +7,8 @@
 #include "database.h"
 using namespace std;
 
-database::database(vector<string> titles_set): titles(titles_set) {
-    for(int i = 0; i < titles.size(); i++)
+database::database(vector<string> titles_set): titles(titles_set), colCount(titles_set.size()) {
+    for(int i = 0; i < colCount; i++)
         decoder.push_back(*new vector<string>());
 };
 
@@ -35,10 +35,25 @@ void database::addData(string s){
     data.push_back(vstrings);
 }
 
+int database::setCount(vector<int>& searchPattern) const{
+    int count = 0;
+    for(auto row : data){
+        bool valid = true;
+        for(int col = 0; col < colCount; col++){
+            if(searchPattern[col] >= 0 && searchPattern[col] != row[col]){
+                valid = false;
+                break;
+            }
+        }
+        if(valid) count++;
+    }
+    return count;
+}
+
 std::ostream& operator<< (std::ostream & out, database const& data){
     int i;
 
-    for(i = 0; i < data.titles.size(); i++)
+    for(i = 0; i < data.colCount; i++)
         out << data.titles[i] << " ";
     out << endl;
 

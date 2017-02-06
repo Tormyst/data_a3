@@ -9,8 +9,9 @@
 #include <array>
 #include <string>
 
-class database {
-public:
+class database { //TODO capitalise
+public: //TODO make private
+    int colCount;
     std::vector<std::string> titles;
     std::list<std::vector<int>> data;
     std::vector<std::vector<std::string>> decoder;
@@ -19,6 +20,7 @@ public:
     const std::string decode(int col, int value) const;
     int encode(int col, std::string value);
     void addData(std::string s);
+    int setCount(std::vector<int>& searchPattern) const;
 
 
 };

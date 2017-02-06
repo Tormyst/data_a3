@@ -21,8 +21,17 @@ unique_ptr<database> readCSV(const string inputFile)
     unique_ptr<database> d(new database(readLine(line)));
 
     while(getline(dataFile, line)){
-        d->addData(line);
+        if(!line.empty())
+            d->addData(line);
     }
+
+    cout << "Count of Data: " << d->data.size() << endl;
+    vector<int> v = {-1, -1, -1, -1, -1};
+    cout << "Count of No Filter: " << d->setCount(v) << endl;
+    v = {0, 0, 0, 0, 0};
+    cout << "Count of all 0: " << d->setCount(v) << endl;
+    v = {0, -1, -1, -1, -1};
+    cout << "Count of first element 0: " << d->setCount(v) << endl;
 
     return d;
 }
