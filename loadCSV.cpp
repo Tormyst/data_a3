@@ -6,13 +6,7 @@
 
 using namespace std;
 
-vector<string> readLine(string s){
-    stringstream ss(s);
-    istream_iterator<string> begin(ss);
-    istream_iterator<string> end;
-    vector<string> vstrings(begin, end);
-    return vstrings;
-}
+vector<string> readLine(string s);
 
 unique_ptr<database> readCSV(const string inputFile)
 {
@@ -31,4 +25,12 @@ unique_ptr<database> readCSV(const string inputFile)
     }
 
     return d;
+}
+
+vector<string> readLine(string s){
+    stringstream ss(s);
+    istream_iterator<string> begin(ss);
+    istream_iterator<string> end;
+    vector<string> vstrings(begin, end);
+    return vstrings;
 }

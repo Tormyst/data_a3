@@ -16,7 +16,7 @@ public:
     std::vector<std::vector<std::string>> decoder;
 
     database(std::vector<std::string> titles);
-    std::string decode(int col, int value);
+    const std::string decode(int col, int value) const;
     int encode(int col, std::string value);
     void addData(std::string s);
 

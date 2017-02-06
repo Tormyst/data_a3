@@ -12,7 +12,7 @@ database::database(vector<string> titles_set): titles(titles_set) {
         decoder.push_back(*new vector<string>());
 };
 
-std::string database::decode(int col, int value){
+const std::string database::decode(int col, int value) const{
     return decoder[col][value];
 }
 
@@ -27,7 +27,6 @@ int database::encode(int col, std::string value){
 
 void database::addData(string s){
     stringstream ss(s);
-//    istream_iterator<string> stream_iterator(ss);
     vector<int> vstrings;
     int col = 0;
     string v;
@@ -45,7 +44,7 @@ std::ostream& operator<< (std::ostream & out, database const& data){
 
     for (auto& l: data.data) {
         for (i = 0; i < l.size(); i++)
-            out << l[i] << " ";
+            out << data.decode(i, l[i]) << " ";
         out << endl;
     }
     return out;
