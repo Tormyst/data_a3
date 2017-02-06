@@ -17,7 +17,6 @@ vector<string> readLine(string s){
 unique_ptr<database> readCSV(const string inputFile)
 {
     ifstream dataFile;
-    unique_ptr<database> d(new database());
     dataFile.open(inputFile);
     if(dataFile.fail()){
         cerr << "ERROR: File " << inputFile <<  " could not be open" << endl;
@@ -25,10 +24,10 @@ unique_ptr<database> readCSV(const string inputFile)
     }
     string line;
     getline(dataFile, line);
-    d->titles = readLine(line);
+    unique_ptr<database> d(new database(readLine(line)));
 
     while(getline(dataFile, line)){
-        d->data.push_back(readLine(line));
+        d->addData(line);
     }
 
     return d;

@@ -3,3 +3,4 @@ ass3
 dataFiles/*
 CMakeLists.txt
 .idea/
+cmake-build-debug/

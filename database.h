@@ -12,9 +12,14 @@
 class database {
 public:
     std::vector<std::string> titles;
-    std::list<std::vector<std::string>> data;
+    std::list<std::vector<int>> data;
+    std::vector<std::vector<std::string>> decoder;
 
-    database(){};
+    database(std::vector<std::string> titles);
+    std::string decode(int col, int value);
+    int encode(int col, std::string value);
+    void addData(std::string s);
+
 
 };
 
