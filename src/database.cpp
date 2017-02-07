@@ -53,7 +53,7 @@ std::ostream& operator<< (std::ostream & out, const Database& data){
     out << endl;
 
     for (auto& l: data._data) {
-        for (i = 0; i < l.size(); i++)
+        for (i = 0; i < data.colCount; i++)
             out << data.decode(i, l[i]) << " ";
         out << endl;
     }
