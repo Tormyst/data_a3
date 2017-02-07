@@ -9,22 +9,27 @@
 #include <array>
 #include <string>
 
-class database { //TODO capitalise
-public: //TODO make private
-    int colCount;
-    std::vector<std::string> titles;
-    std::list<std::vector<int>> data;
-    std::vector<std::vector<std::string>> decoder;
+class Database {
+public:
+    const int colCount;
+private:
+    std::vector<std::string> _titles;
+    std::list<std::vector<int>> _data;
+    std::vector<std::vector<std::string>> _decoder;
 
-    database(std::vector<std::string> titles);
+public:
+    Database(std::vector<std::string> titles);
     const std::string decode(int col, int value) const;
-    int encode(int col, std::string value);
     void addData(std::string s);
     int setCount(std::vector<int>& searchPattern) const;
+    int tuppleCount();
 
+    friend std::ostream& operator<< (std::ostream & out, const Database& data);
 
+private:
+    int encode(int col, std::string value);
 };
 
-std::ostream& operator<< (std::ostream & out, database const& data);
+std::ostream& operator<< (std::ostream & out, Database const& data);
 
 #endif //DATA_A3_DATABASE_H

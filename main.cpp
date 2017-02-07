@@ -5,7 +5,7 @@ using namespace std;
 
 int main(int argc, char** argv){
     int i;
-    unique_ptr<database> db;
+    unique_ptr<Database> db;
     cout << "argc: " << argc << endl;
     for(i = 0; i < argc; i++){
         printf("argv[%d]: %s\n", i, argv[i]);

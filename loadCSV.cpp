@@ -8,7 +8,7 @@ using namespace std;
 
 vector<string> readLine(string s);
 
-unique_ptr<database> readCSV(const string inputFile)
+unique_ptr<Database> readCSV(const string inputFile)
 {
     ifstream dataFile;
     dataFile.open(inputFile);
@@ -18,14 +18,15 @@ unique_ptr<database> readCSV(const string inputFile)
     }
     string line;
     getline(dataFile, line);
-    unique_ptr<database> d(new database(readLine(line)));
+    unique_ptr<Database> d(new Database(readLine(line)));
 
     while(getline(dataFile, line)){
         if(!line.empty())
             d->addData(line);
     }
 
-    cout << "Count of Data: " << d->data.size() << endl;
+    // TEST
+    cout << "Count of Data: " << d->tuppleCount() << endl;
     vector<int> v = {-1, -1, -1, -1, -1};
     cout << "Count of No Filter: " << d->setCount(v) << endl;
     v = {0, 0, 0, 0, 0};

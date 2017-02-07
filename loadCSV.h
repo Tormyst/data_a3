@@ -4,6 +4,6 @@
 #include <memory>
 #include "database.h"
 
-std::unique_ptr<database> readCSV(const std::string inputFile);
+std::unique_ptr<Database> readCSV(const std::string inputFile);
 #endif
 
