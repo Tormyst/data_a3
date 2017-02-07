@@ -1,13 +1,6 @@
-CC = g++
-CPPFLAGS = -std=c++11
-SRCS=$(wildcard *.cpp)
-OBJS=$(SRCS:.cpp=.o)
+SRCS=$(wildcard src/*.cpp)
 
-
-all: ass3
-
-ass3: $(OBJS)
-	$(CC) $(CPPFLAGS) -o ass3 $(OBJS)
-
-%.o: %.cpp
-	$(CC) $(CPPFLAGS) -c $<
+ass3: ${SRCS}
+	mkdir -p cmake-build
+	cd cmake-build; cmake -DCMAKE_BUILD_TYPE=Release ..; make;
+	ln -sf cmake-build/data_a3 ass3

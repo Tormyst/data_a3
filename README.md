@@ -5,14 +5,19 @@
 This project was created to spec for data mining class.
 
 ## Setup
-A make file has been included which provides a default command to build the program.  To create the program use this command:
+A cmake file has been included which provides a default command to build the program.
+For simple use of this cmake project, a makefile has been provided:
 ```bash
 make
 ```
+Although, it is advised to use cmake to configure the project as you would like.  
+The makefile will create for you a symbolic link to the created target file.  
 
 ## Running
 
-The makefile creates an executable named **ass3**.  The program takes in **3** arguments.
+In the build folder you may find the executable **data_a3**.  
+A symbolic link has been provided in the top level directory called  **ass3**.  
+The program takes in **3** arguments.
 
 * A Data File
 * A Minimum Support Rate

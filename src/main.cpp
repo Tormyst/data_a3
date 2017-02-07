@@ -1,6 +1,6 @@
 #include <iostream>
 
-#include "loadCSV.h"
+#include "../include/loadCSV.h"
 using namespace std;
 
 int main(int argc, char** argv){

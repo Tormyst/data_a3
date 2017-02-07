@@ -22,7 +22,7 @@ public:
     const std::string decode(int col, int value) const;
     void addData(std::string s);
     int setCount(std::vector<int>& searchPattern) const;
-    int tuppleCount();
+    const unsigned long tuppleCount() const;
 
     friend std::ostream& operator<< (std::ostream & out, const Database& data);
 

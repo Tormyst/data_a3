@@ -1,6 +1,4 @@
-*.o
 ass3
-dataFiles/*
-CMakeLists.txt
+dataFiles/
 .idea/
-cmake-build-debug/
+cmake-build*/

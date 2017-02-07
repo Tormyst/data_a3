@@ -4,10 +4,10 @@
 #include <iostream>
 #include <sstream>
 
-#include "database.h"
+#include "../include/database.h"
 using namespace std;
 
-Database::Database(vector<string> titles_set): _titles(titles_set), colCount(titles_set.size()) {
+Database::Database(vector<string> titles_set): colCount(titles_set.size()), _titles(titles_set) {
     for(int i = 0; i < colCount; i++)
         _decoder.push_back(*new vector<string>());
 };
@@ -41,7 +41,7 @@ int Database::setCount(vector<int>& searchPattern) const{
     return count;
 }
 
-int Database::tuppleCount(){
+const unsigned long Database::tuppleCount() const{
     return _data.size();
 }
 
