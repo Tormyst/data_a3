@@ -26,15 +26,6 @@ unique_ptr<Database> readCSV(const string inputFile)
             d->addData(line);
     }
 
-    // TEST
-    cout << "Count of Data: " << d->tuppleCount() << endl;
-    vector<int> v = {-1, -1, -1, -1, -1};
-    cout << "Count of No Filter: " << d->setCount(v) << endl;
-    v = {0, 0, 0, 0, 0};
-    cout << "Count of all 0: " << d->setCount(v) << endl;
-    v = {0, -1, -1, -1, -1};
-    cout << "Count of first element 0: " << d->setCount(v) << endl;
-
     return d;
 }
 

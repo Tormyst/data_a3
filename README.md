@@ -26,7 +26,7 @@ The program takes in **3** arguments.
 Running this regularly requires putting this in the PATH variable, or can be run by giving the path.  In most cases the easiest form of this is to append `./` to the beinging of the path name.
 
 ```bash
-./ass3 <Data File> <Minimum Suport Rate> <Minimum Confidence Rate>
+./ass3 <Data File> <Minimum Support Rate> <Minimum Confidence Rate>
 ```
 
 To bring up this information, simply use the command:

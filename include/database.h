@@ -9,13 +9,15 @@
 #include <array>
 #include <string>
 
+#include "frequentSet.h"
+
 class Database {
 public:
     const int colCount;
 private:
     std::vector<std::string> _titles;
-    std::list<std::vector<int>> _data;
-    std::vector<std::vector<std::string>> _decoder;
+    std::vector<std::vector<int>> _data;
+    std::vector<std::vector<std::pair<std::string, int>>> _decoder;
 
 public:
     Database(std::vector<std::string> titles);
@@ -23,6 +25,7 @@ public:
     void addData(std::string s);
     int setCount(std::vector<int>& searchPattern) const;
     const unsigned long tuppleCount() const;
+    std::vector<FrequentSet> getFirstFrequentSets() const;
 
     friend std::ostream& operator<< (std::ostream & out, const Database& data);
 

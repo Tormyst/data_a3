@@ -9,11 +9,11 @@ using namespace std;
 
 Database::Database(vector<string> titles_set): colCount(titles_set.size()), _titles(titles_set) {
     for(int i = 0; i < colCount; i++)
-        _decoder.push_back(*new vector<string>());
+        _decoder.push_back(*new vector<pair<string,int>>());
 };
 
 const std::string Database::decode(int col, int value) const{
-    return _decoder[col][value];
+    return _decoder[col][value].first;
 }
 
 void Database::addData(string s){
@@ -45,6 +45,16 @@ const unsigned long Database::tuppleCount() const{
     return _data.size();
 }
 
+vector<FrequentSet> Database::getFirstFrequentSets() const {
+    vector<FrequentSet> retSet;
+    for (int i = 0; i < colCount; ++i) {
+        for (int j = 0; j < _decoder[i].size(); ++j) {
+            retSet.push_back(FrequentSet(i,j,_decoder[i][j].second));
+        }
+    }
+    return retSet;
+}
+
 std::ostream& operator<< (std::ostream & out, const Database& data){
     int i;
 
@@ -61,10 +71,12 @@ std::ostream& operator<< (std::ostream & out, const Database& data){
 }
 
 int Database::encode(int col, std::string value){
-    int count = _decoder[col].size();
+    int count = static_cast<int>(_decoder[col].size());
     for(int i = 0; i < count; i++)
-        if(_decoder[col][i] == value)
+        if(_decoder[col][i].first == value){
+            _decoder[col][i].second++;
             return i;
-    _decoder[col].push_back(value);
+        }
+    _decoder[col].push_back(pair<string, int>(value, 1));
     return count;
 }
