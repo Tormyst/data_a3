@@ -40,7 +40,9 @@ void apriori(std::shared_ptr<Database> db, double min_sup_f, double min_con_f) {
         }
         if(frequencies_current.size() > 1){
             frequencies_current = frequencies_next;
+            frequencies_next.clear();
         }
+        else break;
         i++;
     }
 }
