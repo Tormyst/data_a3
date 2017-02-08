@@ -22,10 +22,21 @@ void displayHelp(string name, int exitCode) {
     exit(exitCode);
 }
 
+ostream& operator<< (ostream &out, const vector<int> v){
+    out << "[ ";
+    bool comma = false;
+    for (auto i : v){
+        if(comma) out << ", ";
+        else comma = true;
+        out << i;
+    }
+    out << " ]";
+    return out;
+}
+
 int main(int argc, char** argv){
     int i;
-    unique_ptr<Database> db;
-    cout << "argc: " << argc << endl;
+
     for(i = 0; i < argc; i++){
         if(!strncmp("-h", argv[i], 2)) // -h == argv[i]
             displayHelp(argv[0], 0);
@@ -33,6 +44,30 @@ int main(int argc, char** argv){
     if(argc != 4){
         displayHelp(argv[0], 1);
     }
+
+    unique_ptr<Database> db = readCSV(argv[1]);
+
+    vector<FrequentSet> frequencies_current = db->getFirstFrequentSets();
+    vector<FrequentSet> frequencies_next;
+    i = 1;
+    while(i < db->colCount){
+        for(auto first_f = frequencies_current.begin(); first_f != frequencies_current.end(); first_f++){
+            for(auto second_f = first_f; second_f != frequencies_current.end(); second_f++){
+                FrequentSet combination = first_f->combine(*second_f);
+                if(!FrequentSet::isNull(combination)) {
+                    combination = db->setCount(combination);
+                    frequencies_next.push_back(combination);
+                    cout << "Combining sets with a value of " << combination.getFrequency() << ", and a fiter of "
+                         << combination.getFilter(db->colCount) << endl;
+                }
+            }
+        }
+        if(frequencies_current.size() > 1){
+            frequencies_current = frequencies_next;
+        }
+        i++;
+    }
+
 
 
 

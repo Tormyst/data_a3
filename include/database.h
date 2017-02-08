@@ -8,6 +8,7 @@
 #include <vector>
 #include <array>
 #include <string>
+#include <memory>
 
 #include "frequentSet.h"
 
@@ -23,7 +24,7 @@ public:
     Database(std::vector<std::string> titles);
     const std::string decode(int col, int value) const;
     void addData(std::string s);
-    int setCount(std::vector<int>& searchPattern) const;
+    FrequentSet setCount(FrequentSet set) const;
     const unsigned long tuppleCount() const;
     std::vector<FrequentSet> getFirstFrequentSets() const;
 

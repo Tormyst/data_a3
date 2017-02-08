@@ -11,20 +11,25 @@
 typedef std::pair<int,int> intpair;
 
 class FrequentSet {
-public:
-    int frequency;
+// Variables
 private:
+    int frequency;
     std::vector<intpair> filters;
-
+// Functions
 public:
+    FrequentSet(); // Null constructor
     FrequentSet(int col, int value, int frequency);
+    int getFrequency() const;
+    void setFrequency(int set);
     std::vector<int> getFilter(int size); // The size of the array to make.
-    bool addFilter(int col, int value);
-    std::unique_ptr<FrequentSet> combine(FrequentSet other);
+    FrequentSet combine(FrequentSet other) const;
 
 private:
     FrequentSet(std::vector<intpair> filters, intpair newFilter);
-};
+// Static
+public:
+    static bool isNull(FrequentSet f);
 
+};
 
 #endif //DATA_A3_FREQUENTSET_H

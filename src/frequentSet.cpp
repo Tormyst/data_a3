@@ -5,9 +5,19 @@
 #include "frequentSet.h"
 using namespace std;
 
+FrequentSet::FrequentSet() : frequency(-1){}
+
 FrequentSet::FrequentSet(int col, int value, int frequency) :
         frequency(frequency) {
     filters.push_back(intpair(col, value));
+}
+
+int FrequentSet::getFrequency() const{
+    return frequency;
+}
+
+void FrequentSet::setFrequency(int set) {
+    frequency = set;
 }
 
 vector<int> FrequentSet::getFilter(int size){
@@ -18,29 +28,24 @@ vector<int> FrequentSet::getFilter(int size){
     return retFilter;
 }
 
-bool FrequentSet::addFilter(int col, int value) {
-    for(auto f : filters){
-        if(f.first == col)
-            return false;
-    }
-    filters.push_back(intpair(col, value));
-    return true;
-}
-
-unique_ptr<FrequentSet> FrequentSet::combine(FrequentSet other) {
+FrequentSet FrequentSet::combine(FrequentSet other) const {
     if( this->filters.size() != other.filters.size() )
-        return nullptr;
+        return FrequentSet(); // Null value
     int i;
     for(i = 0; i < this->filters.size() - 1; i++){
         if(this->filters[i] != other.filters[i])
-            return nullptr;
+            return FrequentSet(); // Null value
     }
-    if(this->filters[i] == other.filters[i])
-        return nullptr;
-    return unique_ptr<FrequentSet>(new FrequentSet(this->filters, other.filters[i]));
+    if(this->filters[i] == other.filters[i] || this->filters[i].first == other.filters[i].first)
+        return FrequentSet(); // Null value
+    return FrequentSet(this->filters, other.filters[i]);
 }
 
-FrequentSet::FrequentSet(vector<intpair> filters_in, intpair newFilter): filters(filters_in){
+FrequentSet::FrequentSet(vector<intpair> filters_in, intpair newFilter): filters(filters_in), frequency(0){
     filters.push_back(newFilter);
     sort(filters.begin(), filters.end());
+}
+
+bool FrequentSet::isNull(FrequentSet f){
+    return f.getFrequency() < 0;
 }

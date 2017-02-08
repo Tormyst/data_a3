@@ -4,7 +4,8 @@
 #include <iostream>
 #include <sstream>
 
-#include "../include/database.h"
+#include "database.h"
+#include "frequentSet.h"
 using namespace std;
 
 Database::Database(vector<string> titles_set): colCount(titles_set.size()), _titles(titles_set) {
@@ -26,7 +27,8 @@ void Database::addData(string s){
     _data.push_back(vstrings);
 }
 
-int Database::setCount(vector<int>& searchPattern) const{
+FrequentSet Database::setCount(FrequentSet set) const{
+    vector<int> searchPattern = set.getFilter(colCount);
     int count = 0;
     for(auto row : _data){
         bool valid = true;
@@ -38,7 +40,8 @@ int Database::setCount(vector<int>& searchPattern) const{
         }
         if(valid) count++;
     }
-    return count;
+    set.setFrequency(count);
+    return set;
 }
 
 const unsigned long Database::tuppleCount() const{
