@@ -3,7 +3,6 @@
 //
 
 #include "frequentSet.h"
-using namespace std;
 
 FrequentSet::FrequentSet() : frequency(-1){}
 
@@ -20,8 +19,8 @@ void FrequentSet::setFrequency(int set) {
     frequency = set;
 }
 
-vector<int> FrequentSet::getFilter(int size){
-    vector<int> retFilter(size, -1);
+std::vector<int> FrequentSet::getFilter(int size){
+    std::vector<int> retFilter(size, -1);
     for(auto f : filters){
         retFilter[f.first] = f.second;
     }
@@ -41,7 +40,7 @@ FrequentSet FrequentSet::combine(FrequentSet other) const {
     return FrequentSet(this->filters, other.filters[i]);
 }
 
-FrequentSet::FrequentSet(vector<intpair> filters_in, intpair newFilter): filters(filters_in), frequency(0){
+FrequentSet::FrequentSet(std::vector<intpair> filters_in, intpair newFilter): frequency(0), filters(filters_in){
     filters.push_back(newFilter);
     sort(filters.begin(), filters.end());
 }

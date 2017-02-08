@@ -6,29 +6,28 @@
 
 #include "database.h"
 #include "frequentSet.h"
-using namespace std;
 
-Database::Database(vector<string> titles_set): colCount(titles_set.size()), _titles(titles_set) {
+Database::Database(std::vector<std::string> titles_set): colCount(titles_set.size()), _titles(titles_set) {
     for(int i = 0; i < colCount; i++)
-        _decoder.push_back(*new vector<pair<string,int>>());
+        _decoder.push_back(*new std::vector<std::pair<std::string,int>>());
 };
 
 const std::string Database::decode(int col, int value) const{
     return _decoder[col][value].first;
 }
 
-void Database::addData(string s){
-    stringstream ss(s);
-    vector<int> vstrings;
+void Database::addData(std::string s){
+    std::stringstream ss(s);
+    std::vector<int> vstrings;
     int col = 0;
-    string v;
+    std::string v;
     while(ss >> v)
         vstrings.push_back(encode(col++, v));
     _data.push_back(vstrings);
 }
 
 FrequentSet Database::setCount(FrequentSet set) const{
-    vector<int> searchPattern = set.getFilter(colCount);
+    std::vector<int> searchPattern = set.getFilter(colCount);
     int count = 0;
     for(auto row : _data){
         bool valid = true;
@@ -48,8 +47,8 @@ const unsigned long Database::tuppleCount() const{
     return _data.size();
 }
 
-vector<FrequentSet> Database::getFirstFrequentSets() const {
-    vector<FrequentSet> retSet;
+std::vector<FrequentSet> Database::getFirstFrequentSets() const {
+    std::vector<FrequentSet> retSet;
     for (int i = 0; i < colCount; ++i) {
         for (int j = 0; j < _decoder[i].size(); ++j) {
             retSet.push_back(FrequentSet(i,j,_decoder[i][j].second));
@@ -63,12 +62,12 @@ std::ostream& operator<< (std::ostream & out, const Database& data){
 
     for(i = 0; i < data.colCount; i++)
         out << data._titles[i] << " ";
-    out << endl;
+    out << std::endl;
 
     for (auto& l: data._data) {
         for (i = 0; i < data.colCount; i++)
             out << data.decode(i, l[i]) << " ";
-        out << endl;
+        out << std::endl;
     }
     return out;
 }
@@ -80,6 +79,6 @@ int Database::encode(int col, std::string value){
             _decoder[col][i].second++;
             return i;
         }
-    _decoder[col].push_back(pair<string, int>(value, 1));
+    _decoder[col].push_back(std::pair<std::string, int>(value, 1));
     return count;
 }

@@ -5,23 +5,21 @@
 #include <fstream>
 #include<iterator>
 
-using namespace std;
+std::vector<std::string> readLine(std::string s);
 
-vector<string> readLine(string s);
-
-unique_ptr<Database> readCSV(const string inputFile)
+std::unique_ptr<Database> readCSV(const std::string inputFile)
 {
-    ifstream dataFile;
+    std::ifstream dataFile;
     dataFile.open(inputFile);
     if(dataFile.fail()){
-        cerr << "ERROR: File " << inputFile <<  " could not be open" << endl;
+        std::cerr << "ERROR: File " << inputFile <<  " could not be open" << std::endl;
         return NULL;
     }
-    string line;
+    std::string line;
     getline(dataFile, line);
-    unique_ptr<Database> d(new Database(readLine(line)));
+    std::unique_ptr<Database> d(new Database(readLine(line)));
 
-    while(getline(dataFile, line)){
+    while(std::getline(dataFile, line)){
         if(!line.empty())
             d->addData(line);
     }
@@ -29,10 +27,10 @@ unique_ptr<Database> readCSV(const string inputFile)
     return d;
 }
 
-vector<string> readLine(string s){
-    stringstream ss(s);
-    istream_iterator<string> begin(ss);
-    istream_iterator<string> end;
-    vector<string> vstrings(begin, end);
+std::vector<std::string> readLine(std::string s){
+    std::stringstream ss(s);
+    std::istream_iterator<std::string> begin(ss);
+    std::istream_iterator<std::string> end;
+    std::vector<std::string> vstrings(begin, end);
     return vstrings;
 }
