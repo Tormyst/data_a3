@@ -1,6 +1,9 @@
 #include <iostream>
+#include <string>
+#include <stdexcept>
 
-#include "../include/loadCSV.h"
+#include "loadCSV.h"
+#include "apriori.h"
 
 void displayHelp(std::string name, int exitCode) {
     std::cerr << "Usage: " << name << " <Data File> <Minimum Support> <Minimum Confidence> [<Output File>]" << std::endl
@@ -21,18 +24,6 @@ void displayHelp(std::string name, int exitCode) {
     exit(exitCode);
 }
 
-std::ostream& operator<< (std::ostream &out, const std::vector<int> v){
-    out << "[ ";
-    bool comma = false;
-    for (auto i : v){
-        if(comma) out << ", ";
-        else comma = true;
-        out << i;
-    }
-    out << " ]";
-    return out;
-}
-
 int main(int argc, char** argv){
     int i;
 
@@ -41,34 +32,27 @@ int main(int argc, char** argv){
             displayHelp(argv[0], 0);
     }
     if(argc != 4){
+        std::cerr << "ERROR: Invalid number of arguments." << std::endl;
         displayHelp(argv[0], 1);
     }
 
-    std::unique_ptr<Database> db = readCSV(argv[1]);
 
-    std::vector<FrequentSet> frequencies_current = db->getFirstFrequentSets();
-    std::vector<FrequentSet> frequencies_next;
-    i = 1;
-    while(i < db->colCount){
-        for(auto first_f = frequencies_current.begin(); first_f != frequencies_current.end(); first_f++){
-            for(auto second_f = first_f; second_f != frequencies_current.end(); second_f++){
-                FrequentSet combination = first_f->combine(*second_f);
-                if(!FrequentSet::isNull(combination)) {
-                    combination = db->setCount(combination);
-                    frequencies_next.push_back(combination);
-                    std::cout << "Combining sets with a value of " << combination.getFrequency() << ", and a fiter of "
-                         << combination.getFilter(db->colCount) << std::endl;
-                }
-            }
+    double min_sup;
+    double min_con;
+    try {
+        min_sup = std::stof(argv[2]);
+        min_con = std::stof(argv[3]);
+        if(min_con > 1.0 || min_con < 0.0 || min_sup > 1.0 || min_sup < 0.0) {
+            throw std::invalid_argument("Value not between 0.0 and 1.0.");
         }
-        if(frequencies_current.size() > 1){
-            frequencies_current = frequencies_next;
-        }
-        i++;
+    }
+    catch(std::invalid_argument e){
+        std::cerr << "ERROR: Invalid arguments for Minimum Support and Minimum Confidence" << std::endl;
+        displayHelp(argv[0], 2);
     }
 
-
-
+    std::shared_ptr<Database> db = readCSV(argv[1]);
+    apriori(db, min_sup, min_con);
 
     return EXIT_SUCCESS;
 }
