@@ -47,11 +47,12 @@ const unsigned long Database::tuppleCount() const{
     return _data.size();
 }
 
-std::vector<FrequentSet> Database::getFirstFrequentSets() const {
+std::vector<FrequentSet> Database::getFirstFrequentSets(int min_sup) const {
     std::vector<FrequentSet> retSet;
     for (int i = 0; i < colCount; ++i) {
         for (int j = 0; j < _decoder[i].size(); ++j) {
-            retSet.push_back(FrequentSet(i,j,_decoder[i][j].second));
+            if(_decoder[i][j].second >= min_sup)
+                retSet.push_back(FrequentSet(i,j,_decoder[i][j].second));
         }
     }
     return retSet;
