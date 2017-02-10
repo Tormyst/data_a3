@@ -2,6 +2,7 @@
 #include <cmath>
 
 #include "apriori.h"
+#include "rule.h"
 
 std::ostream& operator<< (std::ostream &out, const std::vector<int> v){
     out << "[ ";
@@ -46,13 +47,29 @@ std::vector<std::vector<FrequentSet>> getFrequentSets(std::shared_ptr<Database> 
     return frequencies;
 }
 
-void apriori(std::shared_ptr<Database> db, double min_sup_f, double min_con_f) {
+std::vector<Rule> getRules(std::shared_ptr<Database> db, FrequentSet root, double min_con) {
+    std::vector<Rule> retVal;
+
+
+    return retVal;
+}
+
+void apriori(std::shared_ptr<Database> db, double min_sup_f, double min_con) {
     long min_sup = long(std::ceil(min_sup_f * db->tuppleCount()));
-    long min_con = long(std::ceil(min_con_f * db->tuppleCount()));
 
     std::vector<std::vector<FrequentSet>> sets = getFrequentSets(db, min_sup);
     std::cout << "Sets: " << sets.size() << std::endl;
     for(int i = 0; i < sets.size(); i++){
         std::cout << "set " << i << ": " << sets[i].size() << std::endl;
     }
+
+    std::vector<Rule> rules;
+    for(int i = 1; i < sets.size(); i++){
+        for(auto frequentSet: sets[i]){
+            std::vector<Rule> r = getRules(db, frequentSet, min_con);
+            rules.insert(rules.end(), r.begin(), r.end());
+        }
+    }
+
+    std::cout << "Rules count: " << rules.size() << std::endl;
 }

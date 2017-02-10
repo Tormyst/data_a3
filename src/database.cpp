@@ -26,20 +26,27 @@ void Database::addData(std::string s){
     _data.push_back(vstrings);
 }
 
-FrequentSet Database::setCount(FrequentSet set) const{
+FrequentSet Database::setCount(FrequentSet set) {
     std::vector<int> searchPattern = set.getFilter(colCount);
     int count = 0;
-    for(auto row : _data){
-        bool valid = true;
-        for(int col = 0; col < colCount; col++){
-            if(searchPattern[col] >= 0 && searchPattern[col] != row[col]){
-                valid = false;
-                break;
+    auto s = setFinder.find(set.hashString());
+    if(s != setFinder.end()) {
+        count = s->second;
+    }
+    else {
+        for (auto row : _data) {
+            bool valid = true;
+            for (int col = 0; col < colCount; col++) {
+                if (searchPattern[col] >= 0 && searchPattern[col] != row[col]) {
+                    valid = false;
+                    break;
+                }
             }
+            if (valid) count++;
         }
-        if(valid) count++;
     }
     set.setFrequency(count);
+    setFinder[set.hashString()] = count;
     return set;
 }
 
@@ -47,12 +54,15 @@ const unsigned long Database::tuppleCount() const{
     return _data.size();
 }
 
-std::vector<FrequentSet> Database::getFirstFrequentSets(int min_sup) const {
+std::vector<FrequentSet> Database::getFirstFrequentSets(int min_sup) {
     std::vector<FrequentSet> retSet;
     for (int i = 0; i < colCount; ++i) {
         for (int j = 0; j < _decoder[i].size(); ++j) {
-            if(_decoder[i][j].second >= min_sup)
-                retSet.push_back(FrequentSet(i,j,_decoder[i][j].second));
+            if(_decoder[i][j].second >= min_sup) {
+                FrequentSet f = FrequentSet(i, j, _decoder[i][j].second);
+                setFinder[f.hashString()] = f.getFrequency();
+                retSet.push_back(f);
+            }
         }
     }
     return retSet;

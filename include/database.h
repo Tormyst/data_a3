@@ -9,6 +9,7 @@
 #include <array>
 #include <string>
 #include <memory>
+#include <unordered_map>
 
 #include "frequentSet.h"
 
@@ -19,14 +20,15 @@ private:
     std::vector<std::string> _titles;
     std::vector<std::vector<int>> _data;
     std::vector<std::vector<std::pair<std::string, int>>> _decoder;
+    std::unordered_map<std::string, int> setFinder;
 
 public:
     Database(std::vector<std::string> titles);
     const std::string decode(int col, int value) const;
     void addData(std::string s);
-    FrequentSet setCount(FrequentSet set) const;
+    FrequentSet setCount(FrequentSet set);
     const unsigned long tuppleCount() const;
-    std::vector<FrequentSet> getFirstFrequentSets(int min_sup) const;
+    std::vector<FrequentSet> getFirstFrequentSets(int min_sup) ;
 
     friend std::ostream& operator<< (std::ostream & out, const Database& data);
 

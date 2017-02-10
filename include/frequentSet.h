@@ -22,10 +22,15 @@ public:
     int getFrequency() const;
     void setFrequency(int set);
     std::vector<int> getFilter(int size); // The size of the array to make.
+    std::vector<intpair> getRawFilters() const;
+    void addFilter(intpair filter);
+    FrequentSet remaining(FrequentSet toRemove) const;
     FrequentSet combine(FrequentSet other) const;
+    std::string hashString() const;
 
 private:
     FrequentSet(std::vector<intpair> filters, intpair newFilter);
+    FrequentSet(std::vector<intpair> filters);
 // Static
 public:
     static bool isNull(FrequentSet f);

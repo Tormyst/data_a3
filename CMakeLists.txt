@@ -6,5 +6,5 @@ set(CMAKE_CXX_FLAGS_DEBUG "${CMAKE_CXX_FLAGS_DEBUG} -Wall")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -Wall")
 
 include_directories( ${data_a3_SOURCE_DIR}/include )
-set(SOURCE_FILES src/main.cpp src/loadCSV.cpp src src/database.cpp src/frequentSet.cpp include/frequentSet.h src/apriori.cpp include/apriori.h)
+set(SOURCE_FILES src/main.cpp src/loadCSV.cpp include/loadCSV.h src src/database.cpp include/database.h src/frequentSet.cpp include/frequentSet.h src/apriori.cpp include/apriori.h src/rule.cpp include/rule.h)
 add_executable(data_a3 ${SOURCE_FILES})

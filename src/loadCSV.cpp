@@ -1,9 +1,9 @@
-#include "../include/loadCSV.h"
+#include "loadCSV.h"
 
 #include <iostream>
 #include <sstream>
 #include <fstream>
-#include<iterator>
+#include <iterator>
 
 std::vector<std::string> readLine(std::string s);
 
