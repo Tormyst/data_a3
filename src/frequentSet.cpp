@@ -1,6 +1,7 @@
 //
 // Created by Raphael Bronfman-Nadas on 2017-02-07.
 //
+#include <algorithm>
 
 #include "frequentSet.h"
 
