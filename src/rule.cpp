@@ -30,6 +30,24 @@ Rule Rule::combine(std::shared_ptr<Database> db, Rule other) const {
     return Rule(db, tail.combine(other.tail), combined);
 }
 
+void Rule::prittyPrint(std::ostream &fileOut, std::shared_ptr<Database> db) {
+    fileOut << " { ";
+    bool notFirst = false;
+    for(auto f : head.getRawFilters()){
+        if(notFirst) fileOut << ", ";
+        else notFirst = true;
+        db->printIntPair(fileOut, f);
+    }
+    fileOut << " } " << std::endl << "----> { ";
+    notFirst = false;
+    for(auto f : tail.getRawFilters()){
+        if(notFirst) fileOut << ", ";
+        else notFirst = true;
+        db->printIntPair(fileOut, f);
+    }
+    fileOut << " } " << std::endl;
+}
+
 std::vector<Rule> getFirstRules(std::shared_ptr<Database> db, FrequentSet root, double min_con) {
     std::vector<Rule> retVal;
     std::vector<intpair> rootFilters = root.getRawFilters();

@@ -68,7 +68,7 @@ std::vector<Rule> getRules(std::shared_ptr<Database> db, FrequentSet root, doubl
     return retVal;
 }
 
-void apriori(std::shared_ptr<Database> db, double min_sup_f, double min_con) {
+std::vector<Rule> apriori(std::shared_ptr<Database> db, double min_sup_f, double min_con) {
     long min_sup = long(std::ceil(min_sup_f * db->tuppleCount()));
 
     std::vector<std::vector<FrequentSet>> sets = getFrequentSets(db, min_sup);
@@ -86,4 +86,6 @@ void apriori(std::shared_ptr<Database> db, double min_sup_f, double min_con) {
     }
 
     std::cout << "Rules count: " << rules.size() << std::endl;
+    return rules;
 }
+

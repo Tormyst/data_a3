@@ -8,7 +8,8 @@
 #include <memory>
 
 #include "database.h"
+#include "rule.h"
 
-void apriori(std::shared_ptr<Database> db, double min_sup, double min_con);
+std::vector<Rule> apriori(std::shared_ptr<Database> db, double min_sup, double min_con);
 
 #endif //DATA_A3_APRIORI_H

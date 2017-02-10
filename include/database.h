@@ -28,7 +28,8 @@ public:
     void addData(std::string s);
     FrequentSet setCount(FrequentSet set);
     const unsigned long tuppleCount() const;
-    std::vector<FrequentSet> getFirstFrequentSets(int min_sup) ;
+    std::vector<FrequentSet> getFirstFrequentSets(int min_sup);
+    void printIntPair(std::ostream &out, intpair filter);
 
     friend std::ostream& operator<< (std::ostream & out, const Database& data);
 

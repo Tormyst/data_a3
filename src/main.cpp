@@ -31,7 +31,14 @@ int main(int argc, char** argv){
         if(!strncmp("-h", argv[i], 2)) // -h == argv[i]
             displayHelp(argv[0], 0);
     }
-    if(argc != 4){
+    std::string filename;
+    if(argc == 4){
+        filename = "Rules";
+    }
+    else if(argc == 5){
+        filename = argv[4];
+    }
+    else{
         std::cerr << "ERROR: Invalid number of arguments." << std::endl;
         displayHelp(argv[0], 1);
     }
@@ -52,7 +59,9 @@ int main(int argc, char** argv){
     }
 
     std::shared_ptr<Database> db = readCSV(argv[1]);
-    apriori(db, min_sup, min_con);
+    std::vector<Rule> r = apriori(db, min_sup, min_con);
+
+    prittyPrint(db, r, filename, min_sup, min_con);
 
     return EXIT_SUCCESS;
 }

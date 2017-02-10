@@ -68,6 +68,10 @@ std::vector<FrequentSet> Database::getFirstFrequentSets(int min_sup) {
     return retSet;
 }
 
+void Database::printIntPair(std::ostream &out, intpair filter) {
+    out << _titles[filter.first] << "=" << decode(filter.first, filter.second);
+}
+
 std::ostream& operator<< (std::ostream & out, const Database& data){
     int i;
 

@@ -5,6 +5,9 @@
 #ifndef DATA_A3_RULE_H
 #define DATA_A3_RULE_H
 
+#include <iostream>
+#include <memory>
+
 #include "frequentSet.h"
 #include "database.h"
 
@@ -21,6 +24,8 @@ public:
     double getFrequencyCount() const;
 
     Rule combine(std::shared_ptr<Database> db, Rule other) const;
+
+    void prittyPrint(std::ostream &fileOut, std::shared_ptr<Database> db);
 };
 
 std::vector<Rule> getFirstRules(std::shared_ptr<Database> db, FrequentSet root, double min_con);
