@@ -49,8 +49,22 @@ std::vector<std::vector<FrequentSet>> getFrequentSets(std::shared_ptr<Database> 
 
 std::vector<Rule> getRules(std::shared_ptr<Database> db, FrequentSet root, double min_con) {
     std::vector<Rule> retVal;
-
-
+    std::vector<Rule> currentLevel = getFirstRules(db, root, min_con);
+    std::vector<Rule> nextLevel;
+    while(currentLevel.size() > 0) {
+        for (auto first_f = currentLevel.begin(); first_f != currentLevel.end(); first_f++) {
+            auto second_f = first_f;// start at next
+            for (second_f++; second_f != currentLevel.end(); second_f++) {
+                Rule combination = first_f->combine(db, *second_f);
+                if (combination.getConfidence() > min_con) { // Null confidence will always be less.
+                    nextLevel.push_back(combination);
+                }
+            }
+        }
+        std::move(currentLevel.begin(), currentLevel.end(), std::back_inserter(retVal));
+        currentLevel = nextLevel;
+        nextLevel.clear();
+    }
     return retVal;
 }
 

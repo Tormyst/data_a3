@@ -21,6 +21,7 @@ public:
     FrequentSet(int col, int value, int frequency);
     int getFrequency() const;
     void setFrequency(int set);
+    unsigned long size() const;
     std::vector<int> getFilter(int size); // The size of the array to make.
     std::vector<intpair> getRawFilters() const;
     void addFilter(intpair filter);

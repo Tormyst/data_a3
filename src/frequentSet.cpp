@@ -21,6 +21,10 @@ void FrequentSet::setFrequency(int set) {
     frequency = set;
 }
 
+unsigned long FrequentSet::size() const {
+    return filters.size();
+}
+
 std::vector<int> FrequentSet::getFilter(int size){
     std::vector<int> retFilter(size, -1);
     for(auto f : filters){

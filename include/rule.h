@@ -20,11 +20,10 @@ public:
     double getConfidence() const;
     double getFrequencyCount() const;
 
-    Rule combine(Rule other) const;
-
+    Rule combine(std::shared_ptr<Database> db, Rule other) const;
 };
 
-std::vector<Rule> getFirstRules();
+std::vector<Rule> getFirstRules(std::shared_ptr<Database> db, FrequentSet root, double min_con);
 
 
 #endif //DATA_A3_RULE_H
