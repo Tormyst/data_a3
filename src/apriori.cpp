@@ -23,16 +23,19 @@ std::vector<std::vector<FrequentSet>> getFrequentSets(std::shared_ptr<Database> 
     while(current + 1 < db->colCount){
         frequencies.push_back(std::vector<FrequentSet>());
         for(auto first_f = frequencies[current].begin(); first_f != frequencies[current].end(); first_f++){
-            for(auto second_f = first_f; second_f != frequencies[current].end(); second_f++){
+            auto second_f = first_f;// start at next
+            for(second_f++; second_f != frequencies[current].end(); second_f++){
                 FrequentSet combination = first_f->combine(*second_f);
                 if(!FrequentSet::isNull(combination)) {
+                    int parents = 0;
+                    for(auto set:frequencies[current])
+                        if(combination.isParent(set))
+                            parents++;
+                    if(parents < current + 1) continue;
+
                     combination = db->setCount(combination);
                     if(combination.getFrequency() >= min_sup) {
                         frequencies[current+1].push_back(combination);
-                        std::cout << "Combining sets with a value of "
-                                  << double(combination.getFrequency()) / db->tuppleCount()
-                                  << ", and a filter of "
-                                  << combination.getFilter(db->colCount) << std::endl;
                     }
                 }
             }

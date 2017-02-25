@@ -53,7 +53,7 @@ FrequentSet FrequentSet::remaining(FrequentSet other) const{
     return FrequentSet(f);
 }
 
-FrequentSet FrequentSet::combine(FrequentSet other) const {
+FrequentSet FrequentSet::combine(FrequentSet& other) const {
     if( this->filters.size() != other.filters.size() )
         return FrequentSet(); // Null value
     int i;
@@ -74,6 +74,39 @@ std::string FrequentSet::hashString() const {
     std::string outS;
     s >> outS;
     return outS;
+}
+
+bool FrequentSet::operator ==(const FrequentSet &other) const{
+    if(filters.size() != other.filters.size()) return false;
+    for(int i = 0; i < filters.size();i++)
+        if(filters[i] != other.filters[i])
+            return false;
+    return true;
+}
+
+bool FrequentSet::isParent(const FrequentSet &other) const {
+    if(other.filters.size() != filters.size() - 1) return false;
+    int differing = 0;
+    int first = 0;
+    int second = 0;
+    while(first < filters.size() && second < other.filters.size()) {
+        if (filters[first] == other.filters[second]) {
+            first++;
+            second++;
+        }
+        else if(filters[first] <= other.filters[second]) {
+            first++;
+            differing++;
+        }
+        else{
+            second++;
+            differing++;
+        }
+    }
+    differing += filters.size() - first;
+    differing += other.filters.size() - second;
+
+    return differing == 1;
 }
 
 FrequentSet::FrequentSet(std::vector<intpair> filters_in, intpair newFilter): frequency(0), filters(filters_in){

@@ -26,8 +26,10 @@ public:
     std::vector<intpair> getRawFilters() const;
     void addFilter(intpair filter);
     FrequentSet remaining(FrequentSet toRemove) const;
-    FrequentSet combine(FrequentSet other) const;
+    FrequentSet combine(FrequentSet& other) const;
     std::string hashString() const;
+    bool operator ==(const FrequentSet &other) const;
+    bool isParent(const FrequentSet &other) const;
 
 private:
     FrequentSet(std::vector<intpair> filters, intpair newFilter);
