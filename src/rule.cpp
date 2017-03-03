@@ -3,18 +3,19 @@
 //
 
 #include "rule.h"
-
+// Null constructor
 Rule::Rule() : confidence(-1) {}
 
 Rule::Rule(std::shared_ptr<Database> db, FrequentSet tail, FrequentSet combined): tail(tail), combined(combined) {
     head = combined.remaining(tail);
-    head = db->setCount(head);
+    db->setCount(head);
     confidence = double(combined.getFrequency()) / head.getFrequency();
 }
 
 double Rule::getConfidence() const {return confidence;}
 double  Rule::getFrequencyCount() const {return combined.getFrequency();}
-
+// Very similer to the frequency set combine, this join acts on the tail lists, and tries to combine them.
+// TODO check if I can just remove the bulk of this.
 Rule Rule::combine(std::shared_ptr<Database> db, Rule other) const {
     std::vector<intpair> tailList = this->tail.getRawFilters();
     std::vector<intpair>  otherTailList = other.tail.getRawFilters();
@@ -47,8 +48,8 @@ void Rule::prittyPrint(std::ostream &fileOut, std::shared_ptr<Database> db) {
     }
     fileOut << " } " << std::endl;
 }
-
-std::vector<Rule> getFirstRules(std::shared_ptr<Database> db, FrequentSet root, double min_con) {
+// All rules need to start somewhere, and that start is a root node.
+std::vector<Rule> getFirstRules(std::shared_ptr<Database> db, FrequentSet& root, double min_con) {
     std::vector<Rule> retVal;
     std::vector<intpair> rootFilters = root.getRawFilters();
     for(auto filter : rootFilters) {

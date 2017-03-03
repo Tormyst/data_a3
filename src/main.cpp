@@ -3,7 +3,7 @@
 #include <cstring>
 #include <stdexcept>
 
-#include "loadCSV.h"
+#include "IOfunctions.h"
 #include "apriori.h"
 
 void displayHelp(std::string name, int exitCode) {

@@ -25,14 +25,57 @@ The program takes in **3** arguments.
 
 Running this regularly requires putting this in the PATH variable, or can be run by giving the path.  In most cases the easiest form of this is to append `./` to the beinging of the path name.
 
-```bash
+```
 ./ass3 <Data File> <Minimum Support Rate> <Minimum Confidence Rate>
 ```
 
 To bring up this information, simply use the command:
-```bash
+```
 ./ass3 -h
 ```
 
 ## design
-# //TODO ADD THIS SECTION
+
+### File structure
+There are two folders of files, include and src.  Like many C and C++ project, an individual .h file is provided for every .cpp file, excluding main.
+
+The .h files will hopefuly serve as a guide to the .cpp files.
+
+#### main
+Provides the main function to run the program, checks for input value ranges.
+
+#### IOfunctions
+Provides the input and output functions.
+
+#### database
+Stores values read in from a dataset.  Can check the data set for frequencies that comply with a frequent set,
+create the initial frequent sets from the dataset.
+
+#### frequentSet
+A class representing a set that also contains a frequency.
+
+#### rule
+A class representing a rule.
+
+####apriori
+Provides the main algorithmic glue for the rule generation.
+
+### Function 
+Now, there are quite a few function calls in this program, so I will provide a simplified view to the important highlights.
+
+* main()
+    * IOfunctions->readCSV()
+        * database->addData()
+            * database->encode()
+    * apriori->apriori()
+        * apriori->getFrequentSets()
+            * database->getFirstFrequentSets()
+            * frequentSet->combine()
+            * database->setCount()
+        * apriori->getRules()
+            * rule->getFirstRules()
+            * rule->combine()
+    * IOfunctions->prittyPrint()
+    
+For more detail, please see the code itself.  
+        

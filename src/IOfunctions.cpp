@@ -1,4 +1,4 @@
-#include "loadCSV.h"
+#include "IOfunctions.h"
 
 #include <iostream>
 #include <sstream>
@@ -7,7 +7,7 @@
 #include <iomanip>
 
 std::vector<std::string> readLine(std::string s);
-
+// Input function
 std::unique_ptr<Database> readCSV(const std::string inputFile)
 {
     std::ifstream dataFile;
@@ -27,7 +27,7 @@ std::unique_ptr<Database> readCSV(const std::string inputFile)
 
     return d;
 }
-
+// Output function
 void prittyPrint(std::shared_ptr<Database> db, std::vector<Rule>& r, std::string filename,
                  double min_sup, double min_con){
     std::filebuf ruleFile;

@@ -24,8 +24,8 @@ public:
     unsigned long size() const;
     std::vector<int> getFilter(int size); // The size of the array to make.
     std::vector<intpair> getRawFilters() const;
-    void addFilter(intpair filter);
-    FrequentSet remaining(FrequentSet toRemove) const;
+    void addFilter(intpair filter); // Unused but not forgotten.
+    FrequentSet remaining(FrequentSet& toRemove) const;
     FrequentSet combine(FrequentSet& other) const;
     std::string hashString() const;
     bool operator ==(const FrequentSet &other) const;

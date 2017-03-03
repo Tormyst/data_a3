@@ -12,10 +12,13 @@ Database::Database(std::vector<std::string> titles_set): colCount(titles_set.siz
         _decoder.push_back(*new std::vector<std::pair<std::string,int>>());
 };
 
+// Data in the database is encoded for faster use.  This function reverse the process.
 const std::string Database::decode(int col, int value) const{
     return _decoder[col][value].first;
 }
 
+// Encodes and stores the data from a single line of the database.
+// Expects space seporated data.
 void Database::addData(std::string s){
     std::stringstream ss(s);
     std::vector<int> vstrings;
@@ -26,7 +29,9 @@ void Database::addData(std::string s){
     _data.push_back(vstrings);
 }
 
-FrequentSet Database::setCount(FrequentSet set) {
+// Checks the database for the occurence of a paterm.
+// The pattern is set by the frequent set, but is a vector containing -1 where the filter is not important, and any other valeu if specified.
+void Database::setCount(FrequentSet& set) {
     std::vector<int> searchPattern = set.getFilter(colCount);
     int count = 0;
     auto s = setFinder.find(set.hashString());
@@ -47,13 +52,15 @@ FrequentSet Database::setCount(FrequentSet set) {
     }
     set.setFrequency(count);
     setFinder[set.hashString()] = count;
-    return set;
 }
 
 const unsigned long Database::tuppleCount() const{
     return _data.size();
 }
 
+// Starts off the frequent sets by giving sets of all unique values.
+// Has the advantage that all these sets were counted in the encoding process.
+// Calling this function copies the data into the setFinder for use with setCount.
 std::vector<FrequentSet> Database::getFirstFrequentSets(int min_sup) {
     std::vector<FrequentSet> retSet;
     for (int i = 0; i < colCount; ++i) {
@@ -86,7 +93,9 @@ std::ostream& operator<< (std::ostream & out, const Database& data){
     }
     return out;
 }
-
+// The encode used after reading in data.
+// A pair of ints represent the row and index in the decoder.
+// Can be considered set and subset as well.
 int Database::encode(int col, std::string value){
     int count = static_cast<int>(_decoder[col].size());
     for(int i = 0; i < count; i++)

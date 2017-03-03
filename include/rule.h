@@ -28,7 +28,7 @@ public:
     void prittyPrint(std::ostream &fileOut, std::shared_ptr<Database> db);
 };
 
-std::vector<Rule> getFirstRules(std::shared_ptr<Database> db, FrequentSet root, double min_con);
+std::vector<Rule> getFirstRules(std::shared_ptr<Database> db, FrequentSet& root, double min_con);
 
 
 #endif //DATA_A3_RULE_H

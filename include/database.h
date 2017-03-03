@@ -26,7 +26,7 @@ public:
     Database(std::vector<std::string> titles);
     const std::string decode(int col, int value) const;
     void addData(std::string s);
-    FrequentSet setCount(FrequentSet set);
+    void setCount(FrequentSet& set);
     const unsigned long tuppleCount() const;
     std::vector<FrequentSet> getFirstFrequentSets(int min_sup);
     void printIntPair(std::ostream &out, intpair filter);
