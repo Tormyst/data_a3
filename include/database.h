@@ -29,6 +29,8 @@ public:
     void setCount(FrequentSet& set);
     const unsigned long tuppleCount() const;
     std::vector<FrequentSet> getFirstFrequentSets(int min_sup);
+    std::string getHeader(int col);
+    int getClassUniqueCount(int col);
     void printIntPair(std::ostream &out, intpair filter);
 
     friend std::ostream& operator<< (std::ostream & out, const Database& data);

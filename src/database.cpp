@@ -5,7 +5,6 @@
 #include <sstream>
 
 #include "database.h"
-#include "frequentSet.h"
 
 Database::Database(std::vector<std::string> titles_set): colCount(titles_set.size()), _titles(titles_set) {
     for(int i = 0; i < colCount; i++)
@@ -74,6 +73,10 @@ std::vector<FrequentSet> Database::getFirstFrequentSets(int min_sup) {
     }
     return retSet;
 }
+
+std::string Database::getHeader(int col) {return _titles[col];}
+
+int Database::getClassUniqueCount(int col){return _decoder[col].size();}
 
 void Database::printIntPair(std::ostream &out, intpair filter) {
     out << _titles[filter.first] << "=" << decode(filter.first, filter.second);
