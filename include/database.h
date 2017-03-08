@@ -13,12 +13,15 @@
 
 #include "frequentSet.h"
 
+typedef std::shared_ptr<std::vector<int>> tupple;
+typedef std::vector<tupple> dataSet;
+
 class Database {
 public:
     const int colCount;
 private:
     std::vector<std::string> _titles;
-    std::vector<std::vector<int>> _data;
+    dataSet _data;
     std::vector<std::vector<std::pair<std::string, int>>> _decoder;
     std::unordered_map<std::string, int> setFinder;
 
@@ -29,6 +32,7 @@ public:
     void setCount(FrequentSet& set);
     const unsigned long tuppleCount() const;
     std::vector<FrequentSet> getFirstFrequentSets(int min_sup);
+    dataSet createDataset(); // ends up equivilent to returning data.
     std::string getHeader(int col);
     int getClassUniqueCount(int col);
     void printIntPair(std::ostream &out, intpair filter);

@@ -5,12 +5,28 @@
 #ifndef DATA_A3_ID3_H
 #define DATA_A3_ID3_H
 
+#include <ostream>
 #include "database.h"
 
-class id3 {
-public:
-    // static double entropy(std::shared_ptr<Database> d, int set)
-};
+namespace id3 {
 
+    class Node{
+    private:
+        int _splitTarget;
+        std::vector<Node> _children;
+        bool _leaf;
+        int _v; // Value associated with the leaf node of a tree.
+    public:
+        Node(dataSet& set);
+        Node(int val);
+        std::ostream& toStream(std::ostream& out, int indent=0);
 
+    private:
+        static int bestGain(dataSet& set, double myEntropy);
+    };
+
+    Node createTree(std::shared_ptr<Database> db, int target);
+    double potentialGain(dataSet &set, int split, double myEntropy);
+    double entropy(dataSet& set);
+}
 #endif //DATA_A3_ID3_H

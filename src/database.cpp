@@ -20,11 +20,11 @@ const std::string Database::decode(int col, int value) const{
 // Expects space seporated data.
 void Database::addData(std::string s){
     std::stringstream ss(s);
-    std::vector<int> vstrings;
+    tupple vstrings(new std::vector<int>);
     int col = 0;
     std::string v;
     while(ss >> v)
-        vstrings.push_back(encode(col++, v));
+        vstrings->push_back(encode(col++, v));
     _data.push_back(vstrings);
 }
 
@@ -41,7 +41,7 @@ void Database::setCount(FrequentSet& set) {
         for (auto row : _data) {
             bool valid = true;
             for (int col = 0; col < colCount; col++) {
-                if (searchPattern[col] >= 0 && searchPattern[col] != row[col]) {
+                if (searchPattern[col] >= 0 && searchPattern[col] != (*row)[col]) {
                     valid = false;
                     break;
                 }
@@ -74,6 +74,8 @@ std::vector<FrequentSet> Database::getFirstFrequentSets(int min_sup) {
     return retSet;
 }
 
+dataSet Database::createDataset(){return _data;};
+
 std::string Database::getHeader(int col) {return _titles[col];}
 
 int Database::getClassUniqueCount(int col){return _decoder[col].size();}
@@ -91,7 +93,7 @@ std::ostream& operator<< (std::ostream & out, const Database& data){
 
     for (auto& l: data._data) {
         for (i = 0; i < data.colCount; i++)
-            out << data.decode(i, l[i]) << " ";
+            out << data.decode(i, (*l)[i]) << " ";
         out << std::endl;
     }
     return out;

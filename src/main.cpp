@@ -4,7 +4,7 @@
 #include <stdexcept>
 
 #include "IOfunctions.h"
-#include "apriori.h"
+#include "id3.h"
 
 void displayHelp(std::string name, int exitCode) {
     std::cerr << "Usage: " << name << " <Data File>" << std::endl
@@ -77,7 +77,8 @@ int main(int argc, char** argv){
         displayHelp(argv[0], 2);
     }
 
-
+    id3::Node tree = id3::createTree(db,target);
+    tree.toStream(std::cout);
 
     return EXIT_SUCCESS;
 }
