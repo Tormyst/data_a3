@@ -26,25 +26,50 @@ namespace id3 {
         _leaf = true;
     }
 
-    int magority(dataSet& set){
+    std::pair<int, std::vector<int>> magority(dataSet& set, int tieBreak){
         std::vector<int> counts(db->getClassUniqueCount(target), 0);
         for(auto a : set){counts[(*a)[target]]++;}
-        return (int) std::distance(counts.begin(), std::max_element(counts.begin(), counts.end()));
+
+        double max = counts[0];
+        std::vector<int> maxIndex;
+        maxIndex.push_back(0);
+
+        for(int i=1; i<counts.size();i++) {
+            if(counts[i] > max) {
+                max = counts[i];
+                maxIndex.clear();
+                maxIndex.push_back(i);
+            }
+            else if(counts[i] == max){
+                maxIndex.push_back(i);
+            }
+        }
+
+        std::pair<int, std::vector<int>> ret;
+
+        // If there is a tie, and the tie value is one of the parent values that could contain that tie, then return the index.
+        if(maxIndex.size() > 1 && std::find(maxIndex.begin(), maxIndex.end(), tieBreak) != maxIndex.end() )
+            ret.first = tieBreak;
+        else
+            ret.first =  (int) std::distance(counts.begin(), std::max_element(counts.begin(), counts.end()));
+        ret.second = counts;
+        return ret;
     }
 
-    Node::Node(dataSet& set) : _leaf(false) {
+    // Tie break being the value to use if the set is to be based on the magority, and the winners are tied.
+    Node::Node(dataSet& set, int tieBreak=-1) : _leaf(false) {
+        std::pair<int, std::vector<int>> magor = magority(set, tieBreak);
+
+        _v = magor.first;
+        _counts = magor.second;
+
         double e = entropy(set);
-        if (e < 0.0005) {
-            _v = (*set[0])[target];
-            _leaf = true;
-        } else if (used.size() == db->colCount) {
-            _v = magority(set);
+        if (e < 0.0005 || used.size() == db->colCount) {
             _leaf = true;
         }
         else {
             _splitTarget = bestGain(set, e);
             if(_splitTarget == -1){ // Nothing improves at this point.
-                _v = magority(set);
                 _leaf = true;
             }
             else {
@@ -52,9 +77,9 @@ namespace id3 {
                 for (int i = 0; i < db->getClassUniqueCount(_splitTarget); i++) {
                     dataSet d = subset(set, _splitTarget, i);
                     if (d.size()) {
-                        _children.push_back(Node(d));
+                        _children.push_back(Node(d,_v));
                     } else {
-                        _children.push_back(Node(magority(set)));
+                        _children.push_back(Node(_v));
                     }
                 }
                 used.pop_back();
@@ -81,7 +106,10 @@ namespace id3 {
 
     std::ostream& Node::toStream(std::ostream& out, int indent) {
         if(_leaf) {
-            out << db->getHeader(target) << " is " << db->decode(target, _v);
+            out << db->getHeader(target) << " is " << db->decode(target, _v) << "\t";
+            // TODO add a thing here to turn off and on this output.
+            for(int i = 0; i <_counts.size(); i++)
+                out << db->decode(target, i) << "X" << _counts[i] << "\t";
         }
         else {
             for(int c = 0; c < _children.size(); c++){

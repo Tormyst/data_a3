@@ -15,9 +15,10 @@ namespace id3 {
         int _splitTarget;
         std::vector<Node> _children;
         bool _leaf;
+        std::vector<int> _counts;
         int _v; // Value associated with the leaf node of a tree.
     public:
-        Node(dataSet& set);
+        Node(dataSet& set, int tieBreak);
         Node(int val);
         std::ostream& toStream(std::ostream& out, int indent=0);
 
