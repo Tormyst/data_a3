@@ -6,6 +6,8 @@
 #include <iostream>
 #include <iterator>
 #include <algorithm>
+#include <functional>
+#include <numeric>
 
 namespace id3 {
 
@@ -106,10 +108,17 @@ namespace id3 {
 
     std::ostream& Node::toStream(std::ostream& out, int indent) {
         if(_leaf) {
-            out << db->getHeader(target) << " is " << db->decode(target, _v) << "\t";
+            out << db->getHeader(target) << " is " << db->decode(target, _v);
             // TODO add a thing here to turn off and on this output.
-            for(int i = 0; i <_counts.size(); i++)
-                out << db->decode(target, i) << "X" << _counts[i] << "\t";
+            if(_counts.size()) {
+                int total = std::accumulate(_counts.begin(), _counts.end(), 0, std::plus<int>());
+                for (int i = 0; i < _counts.size(); i++) {
+                    double val = (static_cast<double>(_counts[i]) / total) * 100;
+                    out << "\t" << db->decode(target, i) << "=" << val << "%";
+                }
+            }
+            else
+                out << "\t No support for conclusion.";
         }
         else {
             for(int c = 0; c < _children.size(); c++){
