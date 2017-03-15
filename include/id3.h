@@ -21,6 +21,7 @@ namespace id3 {
         Node(dataSet& set, int tieBreak);
         Node(int val);
         std::ostream& toStream(std::ostream& out, int indent=0);
+        int test(tupple t);
 
     private:
         static int bestGain(dataSet& set, double myEntropy);

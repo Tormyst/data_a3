@@ -16,7 +16,7 @@ std::ostream& operator<< (std::ostream &out, const std::vector<int> v){
     return out;
 }
 
-std::vector<std::vector<FrequentSet>> getFrequentSets(std::shared_ptr<Database> db, long min_sup){
+std::vector<std::vector<FrequentSet>> getFrequentSets(std::shared_ptr<Database> db, int min_sup){
     // Welcome to this mess of a function.
     // frequencies will be the output, an vector of vectors of the sets sorted by size for speed here and later.
     std::vector<std::vector<FrequentSet>> frequencies;
@@ -25,7 +25,7 @@ std::vector<std::vector<FrequentSet>> getFrequentSets(std::shared_ptr<Database> 
     int current = 0;
     while(current + 1 < db->colCount){
         frequencies.push_back(std::vector<FrequentSet>());
-        // Itterait through every pair.  Only 1 pair will be able to join to produce a given set, all others will give the null set.
+        // Itterator through every pair.  Only 1 pair will be able to join to produce a given set, all others will give the null set.
         for(auto first_f = frequencies[current].begin(); first_f != frequencies[current].end(); first_f++){
             auto second_f = first_f;// start at next
             for(second_f++; second_f != frequencies[current].end(); second_f++){
@@ -39,7 +39,7 @@ std::vector<std::vector<FrequentSet>> getFrequentSets(std::shared_ptr<Database> 
                             parents++;
                     if(parents < current + 2) // Why is this +2? Well, 1 for zero indexing frequencies, and 1 because current is one behind of the next generation.
                         continue;
-                    // Finaly compute from database, and add to the set.
+                    // Finnally compute from database, and add to the set.
                     db->setCount(combination);
                     if(combination.getFrequency() >= min_sup) {
                         frequencies[current+1].push_back(combination);

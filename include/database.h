@@ -22,25 +22,27 @@ public:
 private:
     std::vector<std::string> _titles;
     dataSet _data;
+    dataSet _test;
     std::vector<std::vector<std::pair<std::string, int>>> _decoder;
     std::unordered_map<std::string, int> setFinder;
 
 public:
     Database(std::vector<std::string> titles);
     const std::string decode(int col, int value) const;
-    void addData(std::string s);
+    void addData(std::string s, bool testData = false);
     void setCount(FrequentSet& set);
     const unsigned long tuppleCount() const;
     std::vector<FrequentSet> getFirstFrequentSets(int min_sup);
     dataSet createDataset(); // ends up equivilent to returning data.
+    dataSet createTestDataset();
     std::string getHeader(int col);
-    int getClassUniqueCount(int col);
+    unsigned long getClassUniqueCount(int col);
     void printIntPair(std::ostream &out, intpair filter);
 
     friend std::ostream& operator<< (std::ostream & out, const Database& data);
 
 private:
-    int encode(int col, std::string value);
+    int encode(int col, std::string value, bool doCount);
 };
 
 std::ostream& operator<< (std::ostream & out, Database const& data);

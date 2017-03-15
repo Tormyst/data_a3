@@ -4,11 +4,14 @@
 #include <memory>
 #include "database.h"
 #include "rule.h"
+#include "id3.h"
 
-std::unique_ptr<Database> readCSV(const std::string inputFile);
+std::unique_ptr<Database> readCSV(const std::string inputFile, const std::string testFile="");
 
 void prittyPrint(std::shared_ptr<Database> db, std::vector<Rule>& r, std::string filename,
                  double min_sup, double min_con);
+
+void prittyPrintID3(std::shared_ptr<Database> db, id3::Node root, std::string filename, int target);
 
 #endif
 

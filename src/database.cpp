@@ -18,14 +18,14 @@ const std::string Database::decode(int col, int value) const{
 
 // Encodes and stores the data from a single line of the database.
 // Expects space seporated data.
-void Database::addData(std::string s){
+void Database::addData(std::string s, bool testData){
     std::stringstream ss(s);
     tupple vstrings(new std::vector<int>);
     int col = 0;
     std::string v;
     while(ss >> v)
-        vstrings->push_back(encode(col++, v));
-    _data.push_back(vstrings);
+        vstrings->push_back(encode(col++, v, !testData));
+    testData ? _test.push_back(vstrings) : _data.push_back(vstrings);
 }
 
 // Checks the database for the occurence of a paterm.
@@ -76,9 +76,11 @@ std::vector<FrequentSet> Database::getFirstFrequentSets(int min_sup) {
 
 dataSet Database::createDataset(){return _data;};
 
+dataSet Database::createTestDataset() {return _test;}
+
 std::string Database::getHeader(int col) {return _titles[col];}
 
-int Database::getClassUniqueCount(int col){return _decoder[col].size();}
+unsigned long Database::getClassUniqueCount(int col){return _decoder[col].size();}
 
 void Database::printIntPair(std::ostream &out, intpair filter) {
     out << _titles[filter.first] << "=" << decode(filter.first, filter.second);
@@ -101,13 +103,16 @@ std::ostream& operator<< (std::ostream & out, const Database& data){
 // The encode used after reading in data.
 // A pair of ints represent the row and index in the decoder.
 // Can be considered set and subset as well.
-int Database::encode(int col, std::string value){
+int Database::encode(int col, std::string value, bool doCount) {
     int count = static_cast<int>(_decoder[col].size());
-    for(int i = 0; i < count; i++)
-        if(_decoder[col][i].first == value){
-            _decoder[col][i].second++;
+    for (int i = 0; i < count; i++) {
+        if (_decoder[col][i].first == value) {
+            if (doCount)
+                _decoder[col][i].second++;
             return i;
         }
-    _decoder[col].push_back(std::pair<std::string, int>(value, 1));
+    }
+
+    _decoder[col].push_back(std::pair<std::string, int>(value, doCount ? 1 : 0));
     return count;
 }

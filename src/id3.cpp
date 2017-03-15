@@ -15,20 +15,25 @@ namespace id3 {
     int target;
     std::vector<int> used;
 
-    dataSet subset(dataSet &set, int col, int val){
-        dataSet d;
-        for(auto v : set)
-            if((*v)[col] == val)
-                d.push_back(v);
+    // Utility function to split a list in parts.
+    std::vector<dataSet> subset(dataSet &set, int col){
+        std::vector<dataSet> d(db->getClassUniqueCount(col));
+        for (auto a : set) {
+            d[(*a)[col]].push_back(a);
+        }
         return d;
     }
 
+    // Basic constructor used to create leaf nodes when there is no data to suport a conclusion.
     Node::Node(int value){
         _v = value;
         _leaf = true;
     }
 
-    std::pair<int, std::vector<int>> magority(dataSet& set, int tieBreak){
+    // majority finds the most common value in the list, if it is a tie, it tries to use the passed in value to break the tie.
+    // The tie is only broken with that value if it is one of the values tied with.
+    // Otherwise the picked value happens to be the first that appered in the data set.
+    std::pair<int, std::vector<int>> majority(dataSet &set, int tieBreak){
         std::vector<int> counts(db->getClassUniqueCount(target), 0);
         for(auto a : set){counts[(*a)[target]]++;}
 
@@ -58,15 +63,16 @@ namespace id3 {
         return ret;
     }
 
-    // Tie break being the value to use if the set is to be based on the magority, and the winners are tied.
+    // The main part of the function.  This is a recursive constructor.
+    // May morph into a leaf, if there is nothing else that can be done, the entropy is to low, or if nothing improves on the entropy of the data set.
     Node::Node(dataSet& set, int tieBreak=-1) : _leaf(false) {
-        std::pair<int, std::vector<int>> magor = magority(set, tieBreak);
+        std::pair<int, std::vector<int>> major = majority(set, tieBreak);
 
-        _v = magor.first;
-        _counts = magor.second;
+        _v = major.first;
+        _counts = major.second;
 
         double e = entropy(set);
-        if (e < 0.0005 || used.size() == db->colCount) {
+        if (e < 0.0000005 || used.size() == db->colCount) {
             _leaf = true;
         }
         else {
@@ -75,20 +81,26 @@ namespace id3 {
                 _leaf = true;
             }
             else {
+                // Set this value as off limits
                 used.push_back(_splitTarget);
-                for (int i = 0; i < db->getClassUniqueCount(_splitTarget); i++) {
-                    dataSet d = subset(set, _splitTarget, i);
+                for (auto d : subset(set,_splitTarget)) {
                     if (d.size()) {
+                        // Recurse and create the next node.
                         _children.push_back(Node(d,_v));
                     } else {
+                        // There is no suport for this data set, but we still need to create it
                         _children.push_back(Node(_v));
                     }
                 }
+                // Ok future calls can use this value again.
                 used.pop_back();
             }
         }
     }
 
+
+    // Picks the best split value.
+    // Tries all, then picks the best to return.
     int Node::bestGain(dataSet &set, double myEntropy) {
         int best = -1;
         double bestVal = 0.0; // Something large and negative.
@@ -104,14 +116,17 @@ namespace id3 {
         return best;
     }
 
+    // Utility for printing
     std::ostream& tabs(std::ostream& out, int indent) { out << std::endl; for(int i=0;i < indent; i++){out << "\t";} return out;}
 
+    // Nicely print the tree.
     std::ostream& Node::toStream(std::ostream& out, int indent) {
         if(_leaf) {
             out << db->getHeader(target) << " is " << db->decode(target, _v);
-            // TODO add a thing here to turn off and on this output.
+
             if(_counts.size()) {
                 int total = std::accumulate(_counts.begin(), _counts.end(), 0, std::plus<int>());
+                out << "\t Count=" << total;
                 for (int i = 0; i < _counts.size(); i++) {
                     double val = (static_cast<double>(_counts[i]) / total) * 100;
                     out << "\t" << db->decode(target, i) << "=" << val << "%";
@@ -130,6 +145,15 @@ namespace id3 {
         return out;
     }
 
+    // This function runs the tree.
+    int Node::test(tupple t){
+        if(_leaf)
+            return _v;
+        else
+            return _children[(*t)[_splitTarget]].test(t);
+    }
+
+    // Called by main to run the tree.
     Node createTree(std::shared_ptr<Database> indb, int intarget) {
         db = indb;
         target = intarget;
@@ -141,6 +165,7 @@ namespace id3 {
         return Node(d);
     }
 
+    // Calculates the potential gain based on the global value of target.
     double potentialGain(dataSet &set, int split, double myEntropy) {
         std::vector<dataSet> d(db->getClassUniqueCount(split));
         for (auto a : set) {
@@ -153,6 +178,7 @@ namespace id3 {
         return myEntropy;
     }
 
+    // Calculates the entropy based on the global value of target.
     double entropy(dataSet &set) {
         if(!set.size()) return 0.0;
         std::vector<int> count(db->getClassUniqueCount(target), 0);
