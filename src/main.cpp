@@ -2,6 +2,7 @@
 #include <string>
 #include <cstring>
 #include <stdexcept>
+#include <limits>
 
 #include "IOfunctions.h"
 #include "id3.h"
@@ -11,8 +12,10 @@ void displayHelp(std::string name, int exitCode) {
               << "       " << name << " <Data File> <Classifier Target>" << std::endl
               << "       " << name << " <Data File> <Classifier Target> <Test File>" << std::endl
               << "       " << name << " -h " << std::endl
-              << "lists to the file Rules all the rules for the given data file." << std::endl
-              << "Only those rules with a larger support and confidence percentage then indicated." << std::endl
+              << "Creates a decision tree based on the ID3 algorithm." << std::endl
+              << "If no Classifier target is given, user will be prompted." << std::endl
+              << "If a test file is given, a list of the results will be contained in the output file along with the tree" << std::endl
+              << "The output tree will be saved in a file called Rules." << std::endl
               << std::endl
               << "Data File: The path to the data file to be used." << std::endl
               << "           The first row is expected to be the headers of each column." << std::endl
@@ -32,11 +35,17 @@ void displayHelp(std::string name, int exitCode) {
 int main(int argc, char** argv){
     int i;
 
+    if(argc == 1){
+        std::cerr << "ERROR: Invalid number of arguments." << std::endl;
+        displayHelp(argv[0], 1);
+    }
+
     for(i = 0; i < argc; i++){
         if(!strncmp("-h", argv[i], 2)) // -h == argv[i]
             displayHelp(argv[0], 0);
     }
     int target;
+
     std::shared_ptr<Database> db = argc == 4 ? readCSV(argv[1], argv[3]) : readCSV(argv[1]);
     bool notSet = true;
     if(argc == 2){
@@ -55,6 +64,8 @@ int main(int argc, char** argv){
             std::cin >> target;
             if(std::cin.fail() || target <= 0 || target >valid.size() )
             {
+                std::cin.clear(); //clear bad input flag.
+                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
                 std::cout << "Sorry, did not quite catch that.  Please enter the integer associated with your selection." << std::endl;
             }
             else{

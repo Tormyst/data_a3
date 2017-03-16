@@ -5,6 +5,7 @@
 #include <fstream>
 #include <iterator>
 #include <iomanip>
+#include <algorithm>
 #define SPACING 20
 #define SPACE std::left << std::setw(SPACING) << std::setfill(' ')
 
