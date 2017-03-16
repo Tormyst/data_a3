@@ -43,10 +43,12 @@ int main(int argc, char** argv){
         std::vector<int> valid;
         std::cout << "Pick a target attribute: "<< std::endl;
         for(i = 0; i < db->colCount; i++) {
+            valid.push_back(i);
+            std::cout << "\t" << valid.size() << ". " << db->getHeader(i);
             if(db->getClassUniqueCount(i) == 2) {
-                valid.push_back(i);
-                std::cout << "\t" << valid.size() << ". " << db->getHeader(i) << std::endl;
+                std::cout << "     Binary";
             }
+            std::cout << std::endl;
         }
         while(notSet){
             std::cout << "Target: ";
@@ -65,7 +67,7 @@ int main(int argc, char** argv){
     else if(argc == 3 || argc == 4){
 
         for(i = 0; i < db->colCount; i++) {
-            if(db->getClassUniqueCount(i) == 2 && db->getHeader(i) == argv[2]) {
+            if( db->getHeader(i) == argv[2]) {
                 target = i;
                 notSet = false;
                 break;

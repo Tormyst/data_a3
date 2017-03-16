@@ -5,6 +5,8 @@
 #include <fstream>
 #include <iterator>
 #include <iomanip>
+#define SPACING 20
+#define SPACE std::left << std::setw(SPACING) << std::setfill(' ')
 
 std::vector<std::string> readLine(std::string s);
 // Input function
@@ -21,8 +23,10 @@ std::unique_ptr<Database> readCSV(const std::string inputFile, const std::string
     std::unique_ptr<Database> d(new Database(readLine(line)));
 
     while(std::getline(dataFile, line)){
-        if(!line.empty())
+        if(!line.empty()) {
+            std::transform(line.begin(), line.end(), line.begin(), ::tolower);
             d->addData(line);
+        }
     }
 
     dataFile.close();
@@ -38,8 +42,10 @@ std::unique_ptr<Database> readCSV(const std::string inputFile, const std::string
         getline(dataFile, line);
 
         while(std::getline(dataFile, line)){
-            if(!line.empty())
-                d->addData(line,true);
+            if(!line.empty()) {
+                std::transform(line.begin(), line.end(), line.begin(), ::tolower);
+                d->addData(line, true);
+            }
         }
     }
 
@@ -89,24 +95,43 @@ void prittyPrintID3(std::shared_ptr<Database> db, id3::Node root, std::string fi
     if(db->createTestDataset().size() > 0){
         int matchCount = 0;
         int notMatchCount = 0;
-        fileOut << "Test data:" << std::endl;
+        fileOut << std::endl
+                << "~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~" << std::endl
+                << "Test data table: " << std::endl;
+
+        for(int i = 0; i < db->colCount; i++){
+            if(i != target) {
+                std::string h = db->getHeader(i);
+                fileOut << std::left << std::setw(SPACING) << std::setfill(' ') << db->getHeader(i);
+            }
+        }
+
+
+        fileOut << SPACE << db->getHeader(target);
+        fileOut << SPACE << "Predicated-label";
+        fileOut << std::endl;
         for(auto a : db->createTestDataset()){
             int actual = (*a)[target];
             int tval = root.test(a);
 
             if(actual == tval){
-                fileOut << "Correct: ";
                 matchCount++;
             }
             else{
-                fileOut << "Incorrect: ";
                 notMatchCount++;
             }
-            fileOut << "Actual:" << db->decode(target,actual) << " Tree: " << db->decode(target, tval) << std::endl;
+
+            for(int i = 0; i < db->colCount; i++){
+                if(i != target)
+                    fileOut << SPACE << db->decode(i, (*a)[i]);
+            }
+
+            fileOut << SPACE << db->decode(target,actual);
+            fileOut << SPACE << db->decode(target, tval);
+            fileOut << std::endl;
         }
 
-        fileOut << "Count that match: " <<  matchCount << std::endl;
-        fileOut << "Count that did not match: " <<  notMatchCount << std::endl;
+        fileOut << std::endl << "Accuracy: " << (static_cast<double>(matchCount) / db->createTestDataset().size()) * 100 << "%" << std::endl;
     }
 }
 

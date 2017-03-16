@@ -34,6 +34,11 @@ To bring up this information, simply use the command:
 ./ass4 -h
 ```
 
+The samples provided limit the user to 2 option variables, however, I have found nothing to indicate that ID3 must be limited to this search field.
+I have used generic enough functions to allow for multiple values from being selected, and so I will not limit the user.  
+If there is something I am unaware with in ID3 that prevents multiple value targets from being selected, then by all means, don't select those values.
+In the interactive mode, I will indicate which values are binary.
+
 ## Design
 
 ### File structure
