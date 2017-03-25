@@ -5,12 +5,11 @@
 #include <limits>
 
 #include "IOfunctions.h"
-#include "id3.h"
+#include "NaiveBayes.h"
 
 void displayHelp(std::string name, int exitCode) {
-    std::cerr << "Usage: " << name << " <Data File>" << std::endl
-              << "       " << name << " <Data File> <Classifier Target>" << std::endl
-              << "       " << name << " <Data File> <Classifier Target> <Test File>" << std::endl
+    std::cerr << "Usage: " << name << " <Data File> <Test File>" << std::endl
+              << "       " << name << " <Data File> <Test File> <Classifier Target> " << std::endl
               << "       " << name << " -h " << std::endl
               << "Creates a decision tree based on the ID3 algorithm." << std::endl
               << "If no Classifier target is given, user will be prompted." << std::endl
@@ -35,69 +34,30 @@ void displayHelp(std::string name, int exitCode) {
 int main(int argc, char** argv){
     int i;
 
-    if(argc == 1){
-        std::cerr << "ERROR: Invalid number of arguments." << std::endl;
-        displayHelp(argv[0], 1);
-    }
-
     for(i = 0; i < argc; i++){
         if(!strncmp("-h", argv[i], 2)) // -h == argv[i]
             displayHelp(argv[0], 0);
     }
     int target;
 
-    std::shared_ptr<Database> db = argc == 4 ? readCSV(argv[1], argv[3]) : readCSV(argv[1]);
-    bool notSet = true;
-    if(argc == 2){
-        std::vector<int> valid;
-        std::cout << "Pick a target attribute: "<< std::endl;
-        for(i = 0; i < db->colCount; i++) {
-            valid.push_back(i);
-            std::cout << "\t" << valid.size() << ". " << db->getHeader(i);
-            if(db->getClassUniqueCount(i) == 2) {
-                std::cout << "     Binary";
-            }
-            std::cout << std::endl;
-        }
-        while(notSet){
-            std::cout << "Target: ";
-            std::cin >> target;
-            if(std::cin.fail() || target <= 0 || target >valid.size() )
-            {
-                std::cin.clear(); //clear bad input flag.
-                std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
-                std::cout << "Sorry, did not quite catch that.  Please enter the integer associated with your selection." << std::endl;
-            }
-            else{
-                target = valid[target - 1];
-                notSet = false;
-            }
-
-        }
+    if(argc == 3){
+        target = -1;
     }
-    else if(argc == 3 || argc == 4){
-
-        for(i = 0; i < db->colCount; i++) {
-            if( db->getHeader(i) == argv[2]) {
-                target = i;
-                notSet = false;
-                break;
-            }
-        }
+    else if(argc == 4) {
+        target = targetNameToInt(argv[1], argv[3]);
+        if(target == -1)
+            std::cerr << "Error: Target name not recognised.  Entering interactive mode" << std::endl;
     }
-    else{
+    else {
         std::cerr << "ERROR: Invalid number of arguments." << std::endl;
         displayHelp(argv[0], 1);
     }
 
-    if(notSet){
-        std::cerr << "ERROR: Invalid value for target" << std::endl;
-        displayHelp(argv[0], 2);
-    }
+    std::shared_ptr<Database> db = readCSV(argv[1], argv[2], target);
 
-    id3::Node tree = id3::createTree(db,target);
+    auto t = NaiveBayes::Setup(db,target);
 
-    prittyPrintID3(db, tree, "Rules", target);
+    prittyPrintNaiveBayes(db, t, "Rules", target);
 
     return EXIT_SUCCESS;
 }

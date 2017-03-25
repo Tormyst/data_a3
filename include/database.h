@@ -31,6 +31,7 @@ public:
     const std::string decode(int col, int value) const;
     void addData(std::string s, bool testData = false);
     void setCount(FrequentSet& set);
+    int getCount(int col, int row);
     const unsigned long tuppleCount() const;
     std::vector<FrequentSet> getFirstFrequentSets(int min_sup);
     dataSet createDataset(); // ends up equivilent to returning data.

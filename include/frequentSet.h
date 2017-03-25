@@ -19,6 +19,7 @@ private:
 public:
     FrequentSet(); // Null constructor
     FrequentSet(int col, int value, int frequency);
+    FrequentSet(int col1, int val1, int col2, int val2);
     int getFrequency() const;
     void setFrequency(int set);
     unsigned long size() const;

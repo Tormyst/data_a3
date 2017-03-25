@@ -53,6 +53,8 @@ void Database::setCount(FrequentSet& set) {
     setFinder[set.hashString()] = count;
 }
 
+int Database::getCount(int col, int row){return _decoder[col][row].second;}
+
 const unsigned long Database::tuppleCount() const{
     return _data.size();
 }

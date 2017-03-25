@@ -13,6 +13,11 @@ FrequentSet::FrequentSet(int col, int value, int frequency) :
         frequency(frequency) {
     filters.push_back(intpair(col, value));
 }
+//Used in A5 to create the frequency values
+FrequentSet::FrequentSet(int col1, int val1, int col2, int val2){
+    filters.push_back(intpair(col1, val1));
+    filters.push_back(intpair(col2, val2));
+}
 
 int FrequentSet::getFrequency() const{
     return frequency;
