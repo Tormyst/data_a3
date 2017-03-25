@@ -3,6 +3,7 @@
 //
 #include <limits>
 #include <iostream>
+#include <cmath>
 
 #include "NaiveBayes.h"
 #include "frequentSet.h"
@@ -29,7 +30,7 @@ bayesTable NaiveBayes::Setup(std::shared_ptr<Database> &db, int target) {
                     FrequentSet f(target, c, i, j);
                     db->setCount(f);
                     // col[j] = static_cast<double>(f.getFrequency()) / db->getCount(target, c);
-                    col[j] = log(
+                    col[j] = std::log(
                             (f.getFrequency() + (M * (1.0 / db->getClassUniqueCount(i))))
                             /
                             (db->getCount(target, c) + M)
@@ -40,7 +41,7 @@ bayesTable NaiveBayes::Setup(std::shared_ptr<Database> &db, int target) {
             classifierSet.first.push_back(col);
         }
         // WHy recompute this later?
-        classifierSet.second = log((static_cast<double>(db->getCount(target, c)) + M) / (db->tuppleCount() + M));
+        classifierSet.second = std::log((static_cast<double>(db->getCount(target, c)) + M) / (db->tuppleCount() + M));
         b.push_back(classifierSet);
     }
     return b;
